@@ -1,0 +1,14 @@
+# IDEA
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# 编译文件
+target/
+*.class
+
+# 其他
+*.log
+.DS_Store
