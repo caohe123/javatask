@@ -9,6 +9,96 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
+    // 插入新用户
+    public int addUser(User user){
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try{
+
+            conn = DBUtil.getConnection();
+
+            String sql =
+                    "INSERT INTO user(username,password,realname,role) VALUES(?,?,?,?)";
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,user.getUsername());
+
+            pstmt.setString(2,user.getPassword());
+
+            pstmt.setString(3,user.getRealname());
+
+            pstmt.setString(4,user.getRole());
+
+            return pstmt.executeUpdate();
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }finally{
+
+            DBUtil.close(conn,pstmt,null);
+
+        }
+
+        return 0;
+    }
+
+    // 根据用户名查询用户
+    public User getUserByUsername(String username){
+
+        Connection conn = null;
+
+        PreparedStatement pstmt = null;
+
+        ResultSet rs = null;
+
+        User user = null;
+
+        try{
+
+            conn = DBUtil.getConnection();
+
+            String sql =
+                    "SELECT * FROM user WHERE username=?";
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,username);
+
+            rs = pstmt.executeQuery();
+
+            if(rs.next()){
+
+                user = new User();
+
+                user.setId(rs.getInt("id"));
+
+                user.setUsername(rs.getString("username"));
+
+                user.setPassword(rs.getString("password"));
+
+                user.setRealname(rs.getString("realname"));
+
+                user.setRole(rs.getString("role"));
+
+            }
+
+        }catch(Exception e){
+
+            e.printStackTrace();
+
+        }finally{
+
+            DBUtil.close(conn,pstmt,rs);
+
+        }
+
+        return user;
+    }
 
     public User login(String username, String password) {
         System.out.println("================ UserDao 开始 ================");
@@ -70,11 +160,23 @@ public class UserDao {
             System.out.println("执行查询完毕，准备判断结果集");
 
             if (rs.next()) {
+
                 user = new User();
+
                 user.setId(rs.getInt("id"));
+
                 user.setUsername(rs.getString("username"));
+
                 user.setPassword(rs.getString("password"));
-                System.out.println("✅ 查询到用户: " + user.getUsername());
+
+                user.setRealname(rs.getString("realname"));
+
+                user.setRole(rs.getString("role"));
+
+                System.out.println("✅ 查询到用户: "
+                        + user.getUsername()
+                        + " 角色="
+                        + user.getRole());
             } else {
                 System.out.println("❌ rs.next() 返回 false → 没查到任何数据");
             }

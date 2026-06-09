@@ -42,11 +42,20 @@ public class LoginServlet extends HttpServlet {
         User user = userService.login(username, password);
 
         if (user != null) {
-            // 登录成功，保存用户到 session，跳转到主页
+            // 登录成功，保存用户到 session
             request.getSession().setAttribute("user", user);
-            response.sendRedirect("index.jsp");
+
+            // 根据 role 跳转
+            if ("admin".equals(user.getRole())) {
+                response.sendRedirect("admin/index.jsp");
+            } else if ("student".equals(user.getRole())) {
+                response.sendRedirect("student/index.jsp");
+            } else {
+                // 如果 role 不明，默认跳回登录页
+                response.sendRedirect("login.jsp?error=2");
+            }
         } else {
-            // 登录失败，带错误信息跳回登录页
+            // 登录失败
             response.sendRedirect("login.jsp?error=1");
         }
     }
