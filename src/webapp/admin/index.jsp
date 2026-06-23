@@ -30,7 +30,7 @@
     <%-- 图书管理相关按钮 --%>
     <a href="${pageContext.request.contextPath}/book">图书列表管理</a>
     <a href="${pageContext.request.contextPath}/add.jsp">新增图书</a>
-    <a href="#" onclick="alert('请先在图书列表选择图书再修改！')">修改图书</a>
+
 
     <%-- 借阅功能入口（移入盒子内部，可正常点击跳转） --%>
     <a href="${pageContext.request.contextPath}/borrow?action=list">学生借阅记录</a>

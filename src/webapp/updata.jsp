@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.library.model.Book" %>
+<%@ page import="com.library.model.User" %>
 <%@ page import="com.library.service.BookService" %>
 <html>
 <head>
@@ -13,39 +14,42 @@
     </style>
 </head>
 <body>
-    <%-- 先根据URL里的id查询图书信息，回显到表单里 --%>
     <%
-        // 1. 获取要修改的图书ID
+        // 1. 管理员权限校验：仅管理员可进入修改页
+        User loginUser = (User) session.getAttribute("user");
+        if (loginUser == null || !"admin".equals(loginUser.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/book?msg=无操作权限");
+            return;
+        }
+
+        // 2. 获取URL传递的图书ID，空值拦截
         String idStr = request.getParameter("id");
         if (idStr == null || idStr.trim().isEmpty()) {
-            // 如果没有id，直接跳回列表页
-            response.sendRedirect("book?msg=参数错误");
+            response.sendRedirect(request.getContextPath() + "/book?msg=参数错误");
             return;
         }
         int id = Integer.parseInt(idStr);
 
-        // 2. 调用BookService查询图书详情
+        // 3. 查询图书详情，用于表单回显
         BookService bookService = new BookService();
         Book book = bookService.getBookById(id);
 
-        // 3. 如果图书不存在，跳回列表页
+        // 4. 图书不存在时跳转回列表
         if (book == null) {
-            response.sendRedirect("book?msg=图书不存在");
+            response.sendRedirect(request.getContextPath() + "/book?msg=图书不存在");
             return;
         }
-
-        // 4. 把图书对象存入request域，页面用EL表达式回显
         request.setAttribute("book", book);
     %>
 
-    <%-- 操作提示信息（修改失败的提示） --%>
+    <%-- 操作结果提示 --%>
     <div style="text-align: center; color: red;">
         ${param.msg}
     </div>
 
-    <%-- 表单提交到BookServlet，POST方式，标识为update操作 --%>
-    <form action="book" method="post">
-        <%-- 隐藏域：标识操作类型为update，同时传递图书ID --%>
+    <%-- 提交修改表单，POST方式提交到BookServlet --%>
+    <form action="${pageContext.request.contextPath}/book" method="post">
+        <%-- 隐藏域：标识操作类型 + 传递图书ID --%>
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id" value="${book.id}">
 
@@ -76,9 +80,8 @@
 
         <div>
             <button type="submit">提交修改</button>
-            <a href="book">返回列表</a>
+            <a href="${pageContext.request.contextPath}/book">返回列表</a>
         </div>
     </form>
 </body>
 </html>
-
