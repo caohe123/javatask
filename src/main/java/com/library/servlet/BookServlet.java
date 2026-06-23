@@ -57,7 +57,7 @@ public class BookServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("add".equals(action)) {
-            addBook(request, response);
+            add(request, response);
         } else if ("delete".equals(action)) {
             deleteBook(request, response);
         } else if ("update".equals(action)) {
@@ -69,7 +69,7 @@ public class BookServlet extends HttpServlet {
     }
 
     // 新增图书方法，结构和LoginServlet的doPost处理逻辑对齐
-    private void addBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private String add(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 1. 获取表单参数
         String name = request.getParameter("name");
         String author = request.getParameter("author");
@@ -86,18 +86,17 @@ public class BookServlet extends HttpServlet {
         book.setPrice(price);
         book.setStock(stock);
         book.setCategory(category);
+        boolean flag = bookService.addBook(book);
 
-        // 3. 调用Service新增（和LoginServlet调用userService.login的方式一致）
-        boolean success = bookService.addBook(book);
-
-        // 4. 跳转逻辑，和LoginServlet的登录成功/失败跳转一致
-        if (success) {
-            response.sendRedirect("book?msg=新增成功");
+        // 3. 新增成功后重定向到图书列表页
+        if (flag) {
+            return "redirect:" + request.getContextPath() + "/book?action=list";
         } else {
-            response.sendRedirect("add.jsp?msg=新增失败");
+            // 新增失败，返回新增页并提示
+            request.setAttribute("msg", "新增图书失败，请重试");
+            return "/add.jsp";
         }
     }
-
     // 删除图书方法
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));

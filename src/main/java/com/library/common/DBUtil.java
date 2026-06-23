@@ -10,7 +10,7 @@ public class DBUtil {
     // 改成你自己的库名、账号、密码
     private static final String URL = "jdbc:mysql://localhost:3306/library?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
     private static final String USER = "root";
-    private static final String PWD = "13896745211ch";
+    private static final String PWD = "xuyuhang123";
 
     static {
         try {

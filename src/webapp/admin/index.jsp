@@ -24,16 +24,20 @@
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>欢迎管理员登录图书管理系统</h2>
-        <%-- 访问BookServlet，跳转图书列表页 --%>
-        <a href="${pageContext.request.contextPath}/book">图书列表管理</a>
-        <%-- 绝对根路径访问根目录add.jsp，杜绝404 --%>
-        <a href="${pageContext.request.contextPath}/add.jsp">新增图书</a>
-        <%-- 单独点修改页会缺id，弹窗提示，不直接跳转 --%>
-        <a href="#" onclick="alert('请先在图书列表选择图书再修改！')">修改图书</a>
-        <%-- 返回登录页 --%>
-        <a href="${pageContext.request.contextPath}/login.jsp">退出登录</a>
-    </div>
+<div class="box">
+    <h2>欢迎管理员登录图书管理系统</h2>
+
+    <%-- 图书管理相关按钮 --%>
+    <a href="${pageContext.request.contextPath}/book">图书列表管理</a>
+    <a href="${pageContext.request.contextPath}/add.jsp">新增图书</a>
+    <a href="#" onclick="alert('请先在图书列表选择图书再修改！')">修改图书</a>
+
+    <%-- 借阅功能入口（移入盒子内部，可正常点击跳转） --%>
+    <a href="${pageContext.request.contextPath}/borrow?action=list">学生借阅记录</a>
+    <a href="${pageContext.request.contextPath}/borrow?action=overdue">逾期图书管理</a>
+
+    <%-- 退出登录 --%>
+    <a href="${pageContext.request.contextPath}/login.jsp">退出登录</a>
+</div>
 </body>
 </html>
