@@ -1,43 +1,39 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>管理员首页</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+        .box{
+            width: 500px;
+            margin: 100px auto;
             text-align: center;
-            padding-top: 100px;
         }
-        .container {
+        a{
             display: inline-block;
-            padding: 40px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
-        a.button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 15px 30px;
-            background-color: #007BFF;
-            color: white;
+            margin: 15px 10px;
+            padding: 10px 25px;
+            border: 1px solid #0066cc;
             text-decoration: none;
-            border-radius: 5px;
+            color: #0066cc;
+            border-radius: 4px;
         }
-        a.button:hover {
-            background-color: #0056b3;
+        a:hover{
+            background-color: #0066cc;
+            color: white;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>管理员首页</h1>
-    <p>欢迎：${sessionScope.user.username} (${sessionScope.user.realname})</p>
-    <a class="button" href="${pageContext.request.contextPath}/logout">退出登录</a>
-</div>
+    <div class="box">
+        <h2>欢迎管理员登录图书管理系统</h2>
+        <%-- 访问BookServlet，跳转图书列表页 --%>
+        <a href="${pageContext.request.contextPath}/book">图书列表管理</a>
+        <%-- 绝对根路径访问根目录add.jsp，杜绝404 --%>
+        <a href="${pageContext.request.contextPath}/add.jsp">新增图书</a>
+        <%-- 单独点修改页会缺id，弹窗提示，不直接跳转 --%>
+        <a href="#" onclick="alert('请先在图书列表选择图书再修改！')">修改图书</a>
+        <%-- 返回登录页 --%>
+        <a href="${pageContext.request.contextPath}/login.jsp">退出登录</a>
+    </div>
 </body>
 </html>
