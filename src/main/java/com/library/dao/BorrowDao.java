@@ -136,4 +136,50 @@ public class BorrowDao {
         DBUtil.close(conn,pstmt,rs);
         return borrow;
     }
+
+    // 6. 新增：分页查询所有借阅记录
+    public PageBean<Borrow> listAll(int pageNum, int pageSize) throws SQLException {
+        PageBean<Borrow> page = new PageBean<>();
+        List<Borrow> list = new ArrayList<>();
+
+        // 1. 查询总记录数
+        String countSql = "SELECT COUNT(*) FROM borrow";
+        conn = DBUtil.getConnection();
+        pstmt = conn.prepareStatement(countSql);
+        rs = pstmt.executeQuery();
+        if (rs.next()) {
+            page.setTotalCount(rs.getInt(1));
+        }
+        DBUtil.close(null, pstmt, rs); // 关闭当前stmt和rs，conn暂不关闭
+
+        // 2. 查询分页数据
+        String dataSql = "SELECT * FROM borrow LIMIT ?,?";
+        conn = DBUtil.getConnection();
+        pstmt = conn.prepareStatement(dataSql);
+        pstmt.setInt(1, (pageNum - 1) * pageSize); // 计算偏移量
+        pstmt.setInt(2, pageSize); // 每页条数
+        rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            Borrow b = new Borrow();
+            b.setId(rs.getInt("id"));
+            b.setUserId(rs.getInt("user_id"));
+            b.setBookId(rs.getInt("book_id"));
+            b.setBorrowTime(rs.getTimestamp("borrow_time"));
+            b.setDueTime(rs.getTimestamp("due_time"));
+            b.setReturnTime(rs.getTimestamp("return_time"));
+            b.setStatus(rs.getInt("status"));
+            list.add(b);
+        }
+
+        // 封装分页对象
+        page.setData(list);
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.calcPageCount(); // 计算总页数
+
+        // 关闭资源
+        DBUtil.close(conn, pstmt, rs);
+        return page;
+    }
 }
