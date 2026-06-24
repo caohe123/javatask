@@ -32,8 +32,8 @@
     <a href="${pageContext.request.contextPath}/add.jsp">新增图书</a>
 
 
-    <%-- 借阅功能入口（移入盒子内部，可正常点击跳转） --%>
-    <a href="${pageContext.request.contextPath}/borrow?action=list">学生借阅记录</a>
+    <%-- 借阅管理入口：修改为管理员全量借阅记录 --%>
+    <a href="${pageContext.request.contextPath}/borrow?action=allList">全部借阅记录</a>
     <a href="${pageContext.request.contextPath}/borrow?action=overdue">逾期图书管理</a>
 
     <%-- 退出登录 --%>

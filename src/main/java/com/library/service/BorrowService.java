@@ -71,4 +71,9 @@ public class BorrowService {
     public List<Borrow> getOverdueList() throws SQLException {
         return borrowDao.listOverdue();
     }
+
+    // 新增：分页查询所有借阅记录（管理员视角）
+    public PageBean<Borrow> getAllBorrowList(int pageNum, int pageSize) throws SQLException {
+        return borrowDao.listAll(pageNum, pageSize);
+    }
 }
